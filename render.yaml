@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: real-estate-portfolio
+    env: node
+    plan: free
+    region: oregon
+    buildCommand: "npm install"
+    startCommand: "node server.js"
+    envVars:
+      - key: API_URL
+        sync: false   # you’ll set this in Render Dashboard → Environment
+    healthCheckPath: /
