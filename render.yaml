@@ -2,11 +2,12 @@ services:
   - type: web
     name: real-estate-portfolio
     env: node
+    runtime: 18           # specify Node version
     plan: free
     region: oregon
     buildCommand: "npm install"
     startCommand: "node server.js"
     envVars:
       - key: API_URL
-        sync: false   # you’ll set this in Render Dashboard → Environment
+        sync: false        # set the actual URL in Render Dashboard → Environment
     healthCheckPath: /
