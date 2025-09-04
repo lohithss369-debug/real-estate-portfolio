@@ -1,17 +1,17 @@
 const express = require("express");
 const path = require("path");
-const fetch = require("node-fetch");
 require("dotenv").config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Serve frontend
-app.use(express.static(path.join(__dirname)));
+// Serve static frontend (index.html, CSS, JS)
+app.use(express.static(path.join(__dirname, "public")));
 
-// Proxy to Google Sheets API (kept safe in Render Env variable)
+// API proxy (so API_URL is hidden in env var)
 app.get("/api/properties", async (req, res) => {
   try {
+    const fetch = (await import("node-fetch")).default;
     const response = await fetch(process.env.API_URL);
     const data = await response.json();
     res.json(data);
@@ -20,4 +20,6 @@ app.get("/api/properties", async (req, res) => {
   }
 });
 
-app.listen(PORT, () => console.log(`✅ Server running on port ${PORT}`));
+app.listen(PORT, () => {
+  console.log(`✅ Server running on port ${PORT}`);
+});
