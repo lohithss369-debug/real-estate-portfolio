@@ -13,13 +13,26 @@ app.get("/api/properties", async (req, res) => {
   try {
     const fetch = (await import("node-fetch")).default;
     const response = await fetch(process.env.API_URL);
-    const data = await response.json();
-    res.json(data);
+
+    const text = await response.text(); // read raw response
+
+    try {
+      const data = JSON.parse(text); // try parsing as JSON
+      res.json(data);
+    } catch (parseErr) {
+      console.error("Invalid JSON from API:", text);
+      res.status(500).json({
+        error: "Invalid JSON response from API",
+        raw: text, // send raw for debugging
+      });
+    }
   } catch (err) {
+    console.error("Fetch failed:", err);
     res.status(500).json({ error: "Failed to fetch data" });
   }
 });
 
+// Start server
 app.listen(PORT, () => {
   console.log(`✅ Server running on port ${PORT}`);
 });
